@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- BOARD GAME CHOOSER DECISION SUPPORT SYSTEM -->
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Board Game Chooser</title>
+<!-- Google font-->
+<link href="https://fonts.googleapis.com/css?family=Montserrat:100,400,700,900|Ubuntu:300,400" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- CSS skript-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<!--<link rel="stylesheet" href="css/style.css"> -->
+
+<!-- Font Montserrat-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<!-- Font Awesome-->
+<script src="https://kit.fontawesome.com/9597e787fe.js" crossorigin="anonymous"></script>
+
+<!-- Bootstrap skript-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<!-- D3.JS + extrenal js file-->
+<script src = "https://d3js.org/d3.v6.min.js"></script>
+<script src = "https://d3js.org/d3-array.v1.min.js"></script>
+<script src = "https://d3js.org/d3-collection.v1.min.js"></script>
+<script src = "https://d3js.org/d3-color.v1.min.js"></script>
+<script src = "https://d3js.org/d3-format.v1.min.js"></script>
+<script src = "https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src = "https://d3js.org/d3-time.v1.min.js"></script>
+<script src = "https://d3js.org/d3-time-format.v2.min.js"></script>
+<script src = "https://d3js.org/d3-scale.v3.min.js"></script>
+</head>
+<style>
+    body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #0F143E;
+    color: white;
+}
+
+h2 {
+    
+    font-family: 'Montserrat';
+    font-weight: 700;
+    color: rgb(245, 144, 83);
+    text-align: right;
+    margin-top: 1%;
+    padding: 20px;
+}
+
+.container {
+    width: 350px;
+    height: 300px;
+    border: 1px solid white;
+}
+
+input {
+    color: white;
+    font-family: "Montserrat";
+    font-weight: 200;
+    font-size: medium;
+}
+
+.row {
+    margin: 10px 5px;
+}
+#infoDiv {
+    border: solid 1px white;
+    float: right;
+    padding: 10px;
+    color: white;
+    font-weight: normal;
+    margin-top: 20px;
+}
+
+.info_title{
+    color: rgb(245, 144, 83);
+    font-weight: 600;
+    font-size: 19px;
+    text-align: center;
+}
+
+b {
+    color: rgb(245, 144, 83);
+    font-size: 16px;
+}
+
+</style>
+<body>
+    <div class="row">
+    <div class="col">
+        <h2>Board Game Chooser</h2>
+        <br>
+        <div style="padding: 5px 30px;">
+        <label>Category</label><br>
+        <select id="category_selector">
+        </select>
+     </div>
+     <div style="padding: 10px 30px;">
+        <label >Mechanism</label><br>
+        <select id="mech_selector">
+        </select>
+    </div>
+    </div>
+    
+    <div class="col"></div>
+    <div id="infoDiv" class="col">
+        <p class="info_title">Board Game Info</p>
+        <p class="infobox"></p>
+    </div>
+
+    </div>
+
+    <div id="myDiv">
+    </div>
+
+    <script>
+
+    /* SELECT OPTIONS */
+    var select_categ = ["All", "Card Game", "Expansion for Base-Game", "Wargame", "Fantasy", "Children's Game", "Miniuatures", "Dice", "Party Game", "Science Fiction", "Fighting", "Educational", "Abstract Strategy"];
+    var select_mech = ["All", "Dice Rolling", "Hand Management", "Roll/Spin and Move", "Variable Player Selection", "Set Collection", "Card Drafting", "Cooperative Game", "Simulation", "Hexagon Grid"];
+
+    
+    d3.select("#category_selector")
+      .selectAll('myOptions')
+     	.data(select_categ)
+      .enter()
+    	.append('option')
+      .text(function (d) { return d; }) // text showed in the menu
+      .attr("value", function (d) { return d; })
+    
+      d3.select("#mech_selector")
+      .selectAll('myOptions')
+     	.data(select_mech)
+      .enter()
+    	.append('option')
+      .text(function (d) { return d; }) // text showed in the menu
+      .attr("value", function (d) { return d; })
+    
+
+    const width = 1400;
+    const height = 500;
+
+    var margin = {
+        top: 15,
+        bottom: 50,
+        right: 8,
+        left: 40,
+    }
+
+    let svg = d3
+        .select("body")
+        .append("svg")
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width + margin.left + margin.right)
+        .append("g")
+        .attr("transform", "translate ( " + margin.left + ", " + margin.top + ")");;
+        const tParser = d3.timeParse("%d/%m/%Y");
+
+    //  DATA INPUT
+    const games = d3.json("games2.json");
+    games.then((data) => {
+    
+        
+        // parse time data
+        data.forEach(function(d) {
+            d.Year = tParser(d.Year);
+            
+         });
+
+        // X scale
+        let xScale = d3.scaleTime()
+                        .range([0, 1300]);
+        var domainX = d3.extent( data, function(d) { return d.Year; });
+        xScale.domain([tParser("01/01/1990"), tParser("01/01/2020")]);//
+                        
+        // Y scale
+        let yScale = d3
+                    .scaleLinear()
+                    //.base(10)
+                    .domain([4, 10]/*d3.extent(data.map((d) => d["Average Rating"]))*/)
+                    .rangeRound([height, 0]); 
+                        
+        //add x and y axis to group g
+        svg.append("g")
+            .attr("transform", "translate(0, " + height + ")")
+            .call(d3.axisBottom(xScale).scale(xScale))
+        
+        svg.append("g")
+            .call(d3.axisLeft(yScale));
+
+         //make size values by number of comment
+        let comments = d3.extent(data.map((d) => d["Number of Comments"]));
+    
+        // Size scale
+        let size = d3.scaleSqrt()
+                        .domain(comments)
+                        .range([5, 15]);
+
+        //get Categories and Mechanisms
+        let categories = Array.from(new Set(data.map((d) => (d["Category"]))));
+        let mechanisms = Array.from(new Set(data.map( (d) => (d["Mechanism"]))));
+        
+        //Filter colors by category/mechanism
+        let category_color = d3.scaleOrdinal()
+                    .domain(categories)
+                    .range(d3.schemeDark2);
+
+        let mech_color = d3.scaleOrdinal()
+                            .domain(mechanisms)
+                            .range(d3.schemePaired);
+        
+        // Age as Color scale
+        let age = Array.from(new Set(data.map( (d) => (d.Age))));
+        console.log(age);
+        let threshold = d3.scaleLinear()
+                            .domain(age)
+                            .range(d3.schemeSpectral[4]);
+        
+        
+
+        // Create Tooltip
+        let titles = Array.from(new Set(data.map((d) => d.Title)));
+        var tooltip = d3.select("#myDiv")
+                        .append("div")
+                        .style("opacity", 0)
+                        .attr("class", "tooltip")
+                        .style("background-color", "white")
+                       // .style("border", "solid")
+                        //.style("border-width", "1px")
+                        .style("padding", "10px");
+        
+        var infobox = d3.select(".infobox")
+                        .append('p')
+                        
+        
+        data.forEach(function (d){
+                d.Title = d.Title;
+            })
+
+        var mouseleave = function(d){
+            tooltip
+            .transition()
+            .duration(1000)
+            .style("opacity", 0);
+        }
+
+        var yearformat = d3.timeFormat("%Y");
+        
+               //make the circles
+           var chart =  svg.append("g")
+                .selectAll(".circ")
+                .data(data)
+            
+                chart.join(
+                    
+                    enter => enter
+                            .append("circle")
+                                .attr("class", "circ")
+                                .attr("stroke", "white")
+                                .attr("r", (d) => size(d["Number of Comments"]))
+                                .attr("cx", (d) => xScale(d.Year))
+                                .attr("cy", (d) => yScale(d["Average Rating"]))
+                                .attr('fill',(d) => threshold(d.Age))
+                                .attr('title', (d) => d.Title)
+                                .attr('age', (d) => d.Age)
+                                .attr('playtime', (d) => d['Play Time'])
+                                .attr('numplayers', (d) => d["Number of Players"])
+                                .attr('bgrank', (d) => d['Board Game Rank'])
+                                .attr('categories', (d) => d.Category)
+                                .attr('mechanism', (d) => d.Mechanism)
+                                .attr('avgrating', (d) => d['Average Rating'])
+                                
+                )
+                // ON MOUSE CLICK
+                    .on("click", function (event, d){
+                        //console.log(d)
+                        if(event.defaultPrevented){
+                            return
+                        }
+                        var node = d3.select(this);
+                       
+                        infobox.html(
+                            "<b>" + d.Title + "</b><br>" +
+                            "<br><b>Board Game Rank: </b>" + d['Board Game Rank'] +
+                            "<br><b>Average Rating: </b>" + d["Average Rating"] + 
+                            "<br><b>Year: </b>" + yearformat(d.Year) +
+                            "<br><b>Age: </b>" + d.Age + 
+                            "<br><b>Play Time: </b>" + d['Play Time'] + 
+                            "<br><b>Number of Players: </b>" + d['Number of players'] + 
+                            "<br><b>Categories: </b>" + d.Category + 
+                            "<br><b>Mechanisms: </b>" + d.Mechanism)
+                        .style("color", "white")
+                        .style("font-family", "Open Sans")
+                        .style("font-weight", "normal")
+                        .style("line-height", 1.5)
+                        .style("font-size", "14px")
+                        .style('opacity', 1);
+                        console.log(node)
+                    })
+        
+               // TOOLTIP
+                    .on("mousemove", function(event, d){
+                       
+                        tooltip
+                            .transition()
+                            .duration(1000);
+                        tooltip
+                            .html(d.Title)
+                            .style("color", "black")
+                            .style("font-weight", "bold")
+                            .style("left", (event.pageX)+"px")
+                            .style("top", (event.pageY)+"px")
+                            .style('opacity', 1)
+                     })//mousemove(function (d){return d.Title}))
+                    .on("mouseout", function (d){
+                        tooltip.transition()
+                        .duration(1000).style("opacity", 0) 
+                    })
+                
+                
+                //make simulation
+            function makeSimulation(dataset){ 
+                let simulation = d3.forceSimulation(dataset)
+            
+                .force("x", d3.forceX((d) => {
+                    return xScale(d.Year);
+                    }).strength(0.2))
+                
+                .force("y", d3.forceY((d) => {
+                    return yScale(d["Average Rating"]);
+                    }).strength(1))
+                
+                .force("collide", d3.forceCollide((d) => {
+                    return size(d["Number of Comments"]);
+                    }))
+                
+                .alphaDecay(0)
+                .alpha(0.2)
+                .on("tick", tick);
+
+                function tick() {
+                    d3.selectAll(".circ")
+                    .attr("cx", (d) => d.x)
+                    .attr("cy", (d) => d.y);
+                }
+
+                let init_decay = setTimeout(function () {
+                console.log("start alpha decay");
+                simulation.alphaDecay(0.1);
+                }, 2000);
+        } //end of make simulation
+
+        makeSimulation(data);
+
+      
+        /* Function for selectors */
+
+                function updateChartByCategory(selectedCateg){
+                console.log(selectedCateg)
+                var filterData = [];
+                var alldata = data;
+                if (selectedCateg == "All"){
+                    location.reload();
+                }
+                alldata.forEach(function (d){
+                    c = d.Category;
+                    for(j in c){
+                        if(c[j] == selectedCateg){
+                            if(filterData.lenght == 0){
+                                filterData[0] = d;
+                            }else {
+                                filterData.push(d);
+                            }
+                            
+                        }
+                    }
+                })
+                console.log(filterData)
+               
+                d3.selectAll('.circ').data(filterData)
+               .join(
+                   update => update.call(update => update.transition(1000)
+                   .attr("r", (d) => size(d["Number of Comments"]))
+                                .attr("cx", (d) => xScale(d.Year))
+                                .attr("cy", (d) => yScale(d["Average Rating"]))
+                                .attr('fill',(d) => threshold(d.Age))
+                                .attr('title', (d) => d.Title)
+                                .attr('age', (d) => d.Age)
+                                .attr('playtime', (d) => d['Play Time'])
+                                .attr('numplayers', (d) => d["Number of Players"])
+                                .attr('bgrank', (d) => d['Board Game Rank'])
+                                .attr('categories', (d) => d.Category)
+                                .attr('mechanism', (d) => d.Mechanism)
+                                .attr('avgrating', (d) => d['Average Rating']))
+               
+                ) 
+               
+                makeSimulation(filterData)
+                console.log(alldata)
+            }
+
+            function updateChartByMech(selectedMech){
+                console.log(selectedMech)
+                if (selectedMech == "All"){
+                    location.reload();
+                }
+                var alldata = data;
+                var filterData = [];
+                alldata.forEach(function (d){
+                    c = d.Mechanism;
+                    for(j in c){
+                        if(c[j] == selectedMech){
+                            if(filterData.lenght == 0){
+                                filterData[0] = d;
+                            }else {
+                                filterData.push(d);
+                            }
+                            
+                        }
+                    }
+                })
+                console.log(filterData)
+                
+                
+               d3.selectAll('.circ').data(filterData)
+               .join(
+                   update => update.call(update => update.transition(1000)
+                   .attr("r", (d) => size(d["Number of Comments"]))
+                                .attr("cx", (d) => xScale(d.Year))
+                                .attr("cy", (d) => yScale(d["Average Rating"]))
+                                .attr('fill',(d) => threshold(d.Age))
+                                .attr('title', (d) => d.Title)
+                                .attr('age', (d) => d.Age)
+                                .attr('playtime', (d) => d['Play Time'])
+                                .attr('numplayers', (d) => d["Number of Players"])
+                                .attr('bgrank', (d) => d['Board Game Rank'])
+                                .attr('categories', (d) => d.Category)
+                                .attr('mechanism', (d) => d.Mechanism)
+                                .attr('avgrating', (d) => d['Average Rating']))
+               )
+                makeSimulation(filterData)
+            }
+        d3.select("#category_selector")
+                .on("change", function(d) {
+                
+                    var selectedOption = d3.select(this).property("value")
+                    
+                    updateChartByCategory(selectedOption)
+                })
+
+        d3.select("#mech_selector")
+                .on("change", function(d) {
+                
+                    var selectedOption = d3.select(this).property("value")
+                    
+                    updateChartByMech(selectedOption);
+                 })
+        
+        }) //end of change function - changes the coategory-mechanism color dimension
+          
+    //}); //end of json function - loads the data
+
+    </script>
+</body>
+</html>
